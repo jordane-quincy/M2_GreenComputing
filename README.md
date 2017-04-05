@@ -40,6 +40,9 @@ Data Collection module
 Puis
 Data processing
 Puis
-Power policies et Connect module
+Power policies (bases de règles) et Current state module (Pour vérifier l'état en live de l'utilisateur)
 Puis
-Ressources managements
+Ressources managements (couper les différents modules en fonction des power policies)
+
+
+Scénario sous forme d'un logger
