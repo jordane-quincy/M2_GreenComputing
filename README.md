@@ -29,5 +29,12 @@ Ressources : gérer au moins 3 ressources, Luminosité, wifi, cpu, son, bluetoot
 
 Power tutor
 
+
+## RENDU
+Petite page word qui explique ce qu'on a fait (les scénarios utilisés, les techniques d'apprentissage etc)
+
 ## Links :
 https://developer.android.com/reference/android/app/ActivityManager.html
+
+
+
