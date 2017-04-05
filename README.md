@@ -36,5 +36,10 @@ Petite page word qui explique ce qu'on a fait (les scénarios utilisés, les tec
 ## Links :
 https://developer.android.com/reference/android/app/ActivityManager.html
 
-
-
+Data Collection module
+Puis
+Data processing
+Puis
+Power policies et Connect module
+Puis
+Ressources managements
