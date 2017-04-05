@@ -1,6 +1,6 @@
 # M2_GreenComputing
 
-##TP de ouf !!!
+## TP de ouf !!!
 
 Créer un logiciel qui permet de réduire la consommation énergétique en fonction des données utilisateurs
 
