@@ -17,7 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -62,6 +65,25 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        /////////////////////////////////SetData Activity//////////////////////////////////
+        Button decrease_sound_button = (Button) findViewById(R.id.decrease_sound_button);
+        decrease_sound_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView info_text = (TextView) findViewById(R.id.info_text);
+                info_text.setText("decrease");
+            }
+        });
+        Button increase_sound_button = (Button) findViewById(R.id.increase_sound_button);
+        Button decrease_lights_button = (Button) findViewById(R.id.decrease_lights_button);
+        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
+        Button position_button = (Button) findViewById(R.id.position_button);
+        Button wifi_button = (Button) findViewById(R.id.wifi_button);
+        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
+        Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
+
+
 
     }
 
