@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
                     return "Agir";
                 case 2:
-                    return "SECTION 3";
+                    return "Service";
             }
             return null;
         }
