@@ -1,6 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+ <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+     android:stretchColumns="1,1">
 
-</LinearLayout>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <Button
+                android:text="Decrease sound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/decrease_sound_button"
+                style="@android:style/Widget.Button" />
+
+            <Button
+                android:text="Increase sound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/increase_sound_button"
+                style="@android:style/Widget.Button"
+                android:layout_row="0"
+                android:layout_column="1" />
+        </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:text="Increase lights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/increase_lights_button"
+            style="@android:style/Widget.Button" />
+
+        <Button
+            android:text="Decrease lights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/decrease_lights_button"
+            style="@android:style/Widget.Button"
+            android:layout_row="0"
+            android:layout_column="1" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:text="Position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/position_button"
+            style="@android:style/Widget.Button" />
+
+        <Button
+            android:text="Wi-Fi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/wifi_button"
+            style="@android:style/Widget.Button"
+            android:layout_row="0"
+            android:layout_column="1" />
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <Button
+            android:text="Bluetooh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bluetooth_button"
+            style="@android:style/Widget.Button" />
+
+        <Button
+            android:text="Mobile data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mobile_data_button"
+            style="@android:style/Widget.Button"
+            android:layout_row="0"
+            android:layout_column="1" />
+    </TableRow>
+    </TableLayout>
