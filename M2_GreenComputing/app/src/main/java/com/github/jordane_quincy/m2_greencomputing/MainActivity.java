@@ -1,5 +1,8 @@
 package com.github.jordane_quincy.m2_greencomputing;
 
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,15 +14,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -119,6 +127,22 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+
+
+            Button btnIntent = (Button) rootView.findViewById(R.id.btnIntent);
+            Log.d(TAG, "btnIntent finded "+ btnIntent);
+
+        btnIntent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "btnIntent onClick start "+ getActivity());
+                getContext().startService(new Intent(getActivity(), RecordService.class));
+
+                Log.d(TAG, "btnIntent onClick end");
+            }
+        });
+
             return rootView;
         }
     }
