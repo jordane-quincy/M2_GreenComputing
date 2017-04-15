@@ -5,7 +5,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Debug;
@@ -63,7 +65,7 @@ public class RecordService extends Service {
 
 //        Pour relancer automatiquement le service (sans l'intent utilisé initialement)
 //        https://developer.android.com/reference/android/app/Service.html#START_STICKY
-        return Service.START_STICKY;
+        return Service.START_NOT_STICKY; //FIXME: mettre START_STICKY une fois le debug done
     }
 
     @Override
@@ -122,7 +124,7 @@ public class RecordService extends Service {
                 StringBuilder sb = new StringBuilder();
                 ActivityManager.RunningAppProcessInfo appForeground = null;
                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-                
+
                 while (true) {
 
                     //Running application
@@ -145,8 +147,15 @@ public class RecordService extends Service {
                         sb.append("\n").append("totalMem : ").append(memoryInfo.totalMem);
                     }
 
-                    Log.d(TAG, sb.toString());
+                    //CPU
+                    //FIXME : a implementer
 
+                    //Wifi
+                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    sb.append("\n").append("wifi enabled ? ").append(wifiManager.isWifiEnabled());
+
+
+                    Log.d(TAG, sb.toString());
 
                     //Clean stringBuilder for next loop (performance)
                     sb.delete(0, sb.length());
