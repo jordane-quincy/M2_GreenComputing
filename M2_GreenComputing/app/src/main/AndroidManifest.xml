@@ -13,14 +13,21 @@
         android:theme="@style/AppTheme">
 
         <!-- Le receiver permet d'écouter l'intent broadcaster lors du démarrage du téléphone -->
+        <!-- NB : En dessous de Android API level 11 (Honeycomb), l'application doit être lancé une fois avant de recevoir l'intent-->
         <receiver android:name="MyReceiver">
             <intent-filter>
+                <!--Si l'application a été installé sur la partition système-->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!--Si l'application a été installé sur la carte SD-->
+                <!--FIXME: Non testé pour le moment-->
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
             </intent-filter>
         </receiver>
         <!--Le service -->
+        <!-- android:process : The ':' prefix appends the name to your package's standard process name.  -->
         <service
-            android:name=".RecordService">
+            android:name=".RecordService"
+            android:process=":RecordServiceProcess">
         </service>
 
         <activity

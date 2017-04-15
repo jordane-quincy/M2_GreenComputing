@@ -159,6 +159,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            Button btnStopService = (Button) view.findViewById(R.id.btnStopService);
+            btnStopService.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "btnStopService onClick");
+                    boolean serviceCorrectlyStopped = getContext().stopService(new Intent(getActivity(), RecordService.class));
+                    Log.d(TAG, "serviceCorrectlyStopped ? " + serviceCorrectlyStopped);
+                }
+            });
+
             switch(section)
             {
                 case 1:

@@ -6,15 +6,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Debug;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created by jordane on 06/04/17.
@@ -28,7 +25,7 @@ public class RecordService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private final int MILLE_VINGT_QUATRE = 1024;
     private final int BYTES_TO_MO = MILLE_VINGT_QUATRE * MILLE_VINGT_QUATRE;
-    ActivityManager activitymanager;
+    ActivityManager activityManager;
     Debug.MemoryInfo memoryInfo;
     private NotificationManager mNM;
     // Unique Identification Number for the Notification.
@@ -57,27 +54,16 @@ public class RecordService extends Service {
         // Display a notification about us starting.  We put an icon in the status bar.
         showNotification();
 
-//        OneSignal.appContext = this.getApplicationContext();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                OneSignal.appId = OneSignal.getSavedAppId();
-//
-//                OneSignalStateSynchronizer.initUserState(OneSignal.appContext);
-//                OneSignalStateSynchronizer.syncUserState(true);
-//                checkOnFocusSync();
-//
-//                stopSelf();
-//            }
-//        }, "OS_SYNCSRV_ONCREATE").start();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Received start id " + startId + ": " + intent);
         launchLogging();
-        return START_NOT_STICKY;
+
+//        Pour relancer automatiquement le service (sans l'intent utilisé initialement)
+//        https://developer.android.com/reference/android/app/Service.html#START_STICKY
+        return Service.START_STICKY;
     }
 
     @Override
@@ -123,52 +109,63 @@ public class RecordService extends Service {
 
     private void initLogging() {
         Log.d(TAG, "initLogging");
-
-        //TODO: trouver un autre moyen de montrer que le service a bien été lancé.
-        openWebPage("http://www.google.com?q=" + Calendar.getInstance().getTimeInMillis());
-        activitymanager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
     }
 
     private void launchLogging() {
         Log.d(TAG, "launchLogging");
 
-//        ActivityManager activitymanager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> lstRunningApp = activitymanager.getRunningAppProcesses();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                StringBuilder sb = new StringBuilder();
+                ActivityManager.RunningAppProcessInfo appForeground = null;
+                ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+                
+                while (true) {
 
-//        sb.append(runningApp.processName);
-        for (ActivityManager.RunningAppProcessInfo runningApp : lstRunningApp) {
-            if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND == runningApp.importance) {
-                int[] pids = {runningApp.pid};
-                Debug.MemoryInfo[] memoryInfos = activitymanager.getProcessMemoryInfo(pids);
-                memoryInfo = memoryInfos[0];
-//                Log.d(TAG, convertKbToMo(memoryInfo.getTotalPrivateDirty()) +", "+ convertKbToMo(memoryInfo.getTotalPss()) +", "+ convertKbToMo(memoryInfo.getTotalPrivateClean()));
-                break;
+                    //Running application
+                    for (ActivityManager.RunningAppProcessInfo runningApp : activityManager.getRunningAppProcesses()) {
+                        if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND == runningApp.importance) {
+                            appForeground = runningApp;
+                            sb.append("\n").append("appForeground : ").append(appForeground.processName);
+                            break;
+                        }
+                    }
+
+                    //Ram / Memory
+                    activityManager.getMemoryInfo(memoryInfo);
+
+                    sb.append("\n").append("availMem : ").append(memoryInfo.availMem);
+                    sb.append(" (").append(convertbytesToMo(memoryInfo.availMem)).append(" Mo)");
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        //non disponible avant Android API 16
+                        sb.append("\n").append("totalMem : ").append(memoryInfo.totalMem);
+                    }
+
+                    Log.d(TAG, sb.toString());
+
+
+                    //Clean stringBuilder for next loop (performance)
+                    sb.delete(0, sb.length());
+
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-
-        }
-
-//        RAM
-        ActivityManager activityManager = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-
-        Log.d(TAG, convertbytesToMo(memoryInfo.availMem) + "," + convertbytesToMo(memoryInfo.totalMem) + "," + convertbytesToMo(memoryInfo.totalMem - memoryInfo.availMem));
-
+        };
+        new Thread(runnable).start();
     }
 
     private long convertbytesToMo(long bytes) {
         return bytes / BYTES_TO_MO;
     }
 
-    private void openWebPage(String url) {
-        Uri webpage = Uri.parse(url);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); //imperatif car on est dans un service (useless dans une activity)
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 
     /**
      * Class for clients to access.  Because we know this service always
