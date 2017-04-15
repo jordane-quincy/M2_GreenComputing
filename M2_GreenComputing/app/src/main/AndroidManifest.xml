@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!-- Le receiver permet d'écouter l'intent broadcaster lors du démarrage du téléphone -->
+        <receiver android:name="MyReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <!--Le service -->
         <service
             android:name=".RecordService">
         </service>
