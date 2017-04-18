@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Debug;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -153,6 +154,21 @@ public class RecordService extends Service {
                     //Wifi
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     sb.append("\n").append("wifi enabled ? ").append(wifiManager.isWifiEnabled());
+
+                    //mobile data : 3g/4g
+                    //FIXME: ne fonctionne pas
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        boolean isMobileNetworkConnected = Settings.Global.getInt(getContentResolver(), "mobile_data", 0) == 1;
+                        sb.append("\n").append("mobile network enabled ? ").append(isMobileNetworkConnected);
+                    }
+
+                    //flight mode
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        //non disponible avant Android API 17 : https://developer.android.com/reference/android/provider/Settings.Global.html#AIRPLANE_MODE_ON
+                        boolean isAirPlaneModeEnabled = Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+                        sb.append("\n").append("airplane mode enabled ? ").append(isAirPlaneModeEnabled);
+                    }
+
 
 
                     Log.d(TAG, sb.toString());
