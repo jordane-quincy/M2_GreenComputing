@@ -38,6 +38,6 @@ public class CpuInfo {
 
 
     private int getCpuUsage() {
-        return curFreq * 100 / maxFreq;
+        return maxFreq == 0 ? 0 : curFreq * 100 / maxFreq;
     }
 }
