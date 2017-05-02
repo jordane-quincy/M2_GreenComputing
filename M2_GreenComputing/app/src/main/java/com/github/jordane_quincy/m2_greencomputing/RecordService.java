@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by jordane on 06/04/17.
@@ -46,6 +44,8 @@ public class RecordService extends Service {
 
     ActivityManager activityManager;
     Debug.MemoryInfo memoryInfo;
+    CpuInfo cpuInfo;
+
     boolean shouldContinue = true;
     private NotificationManager mNM;
     // Unique Identification Number for the Notification.
@@ -134,6 +134,7 @@ public class RecordService extends Service {
     private void initLogging() {
         Log.d(TAG, "initLogging");
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        cpuInfo = new CpuInfo(0, 0, 0);
 
     }
 
@@ -184,7 +185,7 @@ public class RecordService extends Service {
 
                     //CPU
                     //FIXME : a implementer
-                    getCpuInfo();
+                    updateCpuInfo();
 
                     //Wifi
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -278,39 +279,29 @@ public class RecordService extends Service {
         return sb.toString();
     }
 
-    private List<CpuInfo> getCpuInfo() {
-        Log.d(TAG, "IN - getCpuInfo");//FIXME: to remove
-        // nbCpu may change !
-        // cf : https://developer.android.com/reference/java/lang/Runtime.html#availableProcessors()
-        int nbCpu = Runtime.getRuntime().availableProcessors();
-        Log.d(TAG, "nbCpu :" + nbCpu);
+    private void updateCpuInfo() {
+//        // nbCpu may change !
+//        // cf : https://developer.android.com/reference/java/lang/Runtime.html#availableProcessors()
+//        int nbCpu = Runtime.getRuntime().availableProcessors();
+//        Log.d(TAG, "nbCpu :" + nbCpu);
 
-        List<CpuInfo> lstCpuInfo = new ArrayList<>(nbCpu);
+        File cpuInfoMinFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
+        String cpuInfoMinFreqString = readFile(cpuInfoMinFreqFile, false);
+        Log.d(TAG, "cpuInfoMinFreqString:" + cpuInfoMinFreqString);
+        int cpuInfoMinFreq = isNullOrEmpty(cpuInfoMinFreqString) ? 0 : Integer.parseInt(cpuInfoMinFreqString);
+        cpuInfo.setMinFreq(cpuInfoMinFreq);
 
-        for (int i = 0; i < nbCpu; i++) {
-            Log.d(TAG, "cur Cpu number :" + i);
+        File cpuInfoMaxFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
+        String cpuInfoMaxFreqString = readFile(cpuInfoMaxFreqFile, false);
+        Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
+        int cpuInfoMaxFreq = isNullOrEmpty(cpuInfoMaxFreqString) ? 0 : Integer.parseInt(cpuInfoMaxFreqString);
+        cpuInfo.setMaxFreq(cpuInfoMaxFreq);
 
-            File cpuInfoMinFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_min_freq");
-            String cpuInfoMinFreqString = readFile(cpuInfoMinFreqFile, false);
-            Log.d(TAG, "cpuInfoMinFreqString:" + cpuInfoMinFreqString);
-            int cpuInfoMinFreq = isNullOrEmpty(cpuInfoMinFreqString) ? 0 : Integer.parseInt(cpuInfoMinFreqString);
-
-            File cpuInfoMaxFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_max_freq");
-            String cpuInfoMaxFreqString = readFile(cpuInfoMaxFreqFile, false);
-            Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
-            int cpuInfoMaxFreq = isNullOrEmpty(cpuInfoMaxFreqString) ? 0 : Integer.parseInt(cpuInfoMaxFreqString);
-
-            File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_cur_freq");
-            String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
-            Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
-            int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
-
-            CpuInfo curCpuInfo = new CpuInfo(cpuInfoMinFreq, cpuInfoMaxFreq, cpuInfoCurFreq);
-
-            lstCpuInfo.add(curCpuInfo);
-        }
-
-        return lstCpuInfo;
+        File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
+        String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
+        Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
+        int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
+        cpuInfo.setCurFreq(cpuInfoCurFreq);
     }
 
     private boolean isNullOrEmpty(String string) {

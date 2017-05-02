@@ -5,14 +5,26 @@ package com.github.jordane_quincy.m2_greencomputing;
  */
 
 public class CpuInfo {
-    int min_freq;
-    int max_freq;
-    int cur_freq;
+    private int minFreq;
+    private int maxFreq;
+    private int curFreq;
 
-
-    public CpuInfo(int min_freq, int max_freq, int cur_freq) {
-        this.min_freq = min_freq;
-        this.max_freq = max_freq;
-        this.cur_freq = cur_freq;
+    public CpuInfo(int minFreq, int maxFreq, int curFreq) {
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
+        this.curFreq = curFreq;
     }
+
+    public void setMinFreq(int minFreq) {
+        this.minFreq = minFreq;
+    }
+
+    public void setMaxFreq(int maxFreq) {
+        this.maxFreq = maxFreq;
+    }
+
+    public void setCurFreq(int curFreq) {
+        this.curFreq = curFreq;
+    }
+
 }
