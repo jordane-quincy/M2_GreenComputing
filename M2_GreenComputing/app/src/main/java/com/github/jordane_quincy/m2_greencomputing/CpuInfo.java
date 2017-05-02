@@ -27,4 +27,17 @@ public class CpuInfo {
         this.curFreq = curFreq;
     }
 
+    @Override
+    public String toString() {
+        return "CpuInfo{" +
+                "minFreq=" + minFreq +
+                ", maxFreq=" + maxFreq +
+                ", curFreq=" + curFreq + " (" + getCpuUsage() + "%)" +
+                '}';
+    }
+
+
+    private int getCpuUsage() {
+        return curFreq * 100 / maxFreq;
+    }
 }

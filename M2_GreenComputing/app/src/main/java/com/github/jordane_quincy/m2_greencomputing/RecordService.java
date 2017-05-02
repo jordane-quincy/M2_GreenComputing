@@ -31,15 +31,14 @@ import java.io.IOException;
 public class RecordService extends Service {
 
     private static final String TAG = RecordService.class.getSimpleName();
+    //The thread have to wait SLEEP_TIME_FOR_THREAD_IN_MILLIS milliseconds before new loop
+    private static final long SLEEP_TIME_FOR_THREAD_IN_MILLIS = 2000;
     // This is the object that receives interactions from clients.  See
     // RemoteService for a more complete example.
     private final IBinder mBinder = new LocalBinder();
     private final int MILLE_VINGT_QUATRE = 1024;
     private final int BYTES_TO_MO = MILLE_VINGT_QUATRE * MILLE_VINGT_QUATRE;
     private final int FILE_SIZE_LIMIT_IN_MO = 1;
-
-    private final int MILLE = 1000;
-    private final int HZ_TO_GHZ = MILLE * MILLE;
 
 
     ActivityManager activityManager;
@@ -134,7 +133,7 @@ public class RecordService extends Service {
     private void initLogging() {
         Log.d(TAG, "initLogging");
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        cpuInfo = new CpuInfo(0, 0, 0);
+        cpuInfo = initCpuInfo();
 
     }
 
@@ -184,8 +183,9 @@ public class RecordService extends Service {
                     }
 
                     //CPU
-                    //FIXME : a implementer
                     updateCpuInfo();
+                    sb.append("\n").append("cpuInfo : ").append(cpuInfo);
+
 
                     //Wifi
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -221,7 +221,7 @@ public class RecordService extends Service {
                     sb.delete(0, sb.length());
 
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(SLEEP_TIME_FOR_THREAD_IN_MILLIS);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -259,7 +259,7 @@ public class RecordService extends Service {
 
     private String readFile(File fileToRead, boolean addNewLineChar) {
         StringBuilder sb = new StringBuilder();
-        Log.d(TAG, "fileToRead =" + fileToRead);
+//        Log.d(TAG, "fileToRead =" + fileToRead);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileToRead));
@@ -273,33 +273,44 @@ public class RecordService extends Service {
             }
             br.close();
         } catch (IOException e) {
-            Log.e(TAG, "error in readFile:" + e);
+            Log.e(TAG, "error in readFile ('" + fileToRead + "') :" + e);
         }
 
         return sb.toString();
     }
 
-    private void updateCpuInfo() {
+    private CpuInfo initCpuInfo() {
 //        // nbCpu may change !
 //        // cf : https://developer.android.com/reference/java/lang/Runtime.html#availableProcessors()
 //        int nbCpu = Runtime.getRuntime().availableProcessors();
 //        Log.d(TAG, "nbCpu :" + nbCpu);
 
+
         File cpuInfoMinFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq");
         String cpuInfoMinFreqString = readFile(cpuInfoMinFreqFile, false);
-        Log.d(TAG, "cpuInfoMinFreqString:" + cpuInfoMinFreqString);
+//        Log.d(TAG, "cpuInfoMinFreqString:" + cpuInfoMinFreqString);
         int cpuInfoMinFreq = isNullOrEmpty(cpuInfoMinFreqString) ? 0 : Integer.parseInt(cpuInfoMinFreqString);
-        cpuInfo.setMinFreq(cpuInfoMinFreq);
 
         File cpuInfoMaxFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
         String cpuInfoMaxFreqString = readFile(cpuInfoMaxFreqFile, false);
-        Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
+//        Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
         int cpuInfoMaxFreq = isNullOrEmpty(cpuInfoMaxFreqString) ? 0 : Integer.parseInt(cpuInfoMaxFreqString);
-        cpuInfo.setMaxFreq(cpuInfoMaxFreq);
 
         File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
         String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
-        Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
+//        Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
+        int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
+
+
+        CpuInfo cpuInfo = new CpuInfo(cpuInfoMinFreq, cpuInfoMaxFreq, cpuInfoCurFreq);
+
+        return cpuInfo;
+    }
+
+    private void updateCpuInfo() {
+        File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
+        String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
+//        Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
         int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
         cpuInfo.setCurFreq(cpuInfoCurFreq);
     }
@@ -308,9 +319,6 @@ public class RecordService extends Service {
         return string == null || string.isEmpty();
     }
 
-    private float convertHzToGhz(int hz) {
-        return hz / HZ_TO_GHZ;
-    }
 
     /**
      * Class for clients to access.  Because we know this service always
