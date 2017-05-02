@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
@@ -15,6 +17,14 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jordane on 06/04/17.
@@ -28,8 +38,15 @@ public class RecordService extends Service {
     private final IBinder mBinder = new LocalBinder();
     private final int MILLE_VINGT_QUATRE = 1024;
     private final int BYTES_TO_MO = MILLE_VINGT_QUATRE * MILLE_VINGT_QUATRE;
+    private final int FILE_SIZE_LIMIT_IN_MO = 1;
+
+    private final int MILLE = 1000;
+    private final int HZ_TO_GHZ = MILLE * MILLE;
+
+
     ActivityManager activityManager;
     Debug.MemoryInfo memoryInfo;
+    boolean shouldContinue = true;
     private NotificationManager mNM;
     // Unique Identification Number for the Notification.
     // We use it on Notification start, and to cancel it.
@@ -71,6 +88,10 @@ public class RecordService extends Service {
 
     @Override
     public void onDestroy() {
+
+        // stop the thread
+        shouldContinue = false;
+
         // Cancel the persistent notification.
         mNM.cancel(NOTIFICATION);
 
@@ -126,7 +147,20 @@ public class RecordService extends Service {
                 ActivityManager.RunningAppProcessInfo appForeground = null;
                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
 
-                while (true) {
+                SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                Sensor sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+
+                FileOutputStream outputStream = null;
+                try {
+                    File recordFile = new File(getApplicationContext().getFilesDir(), "recordServiceFile.txt");
+                    Log.d(TAG, "create recordFile : " + recordFile);
+
+                    outputStream = new FileOutputStream(recordFile, true); //append mode
+                } catch (Exception e) {
+                    Log.e(TAG, "impossible to create FileOutputStream " + e);
+                }
+
+                while (shouldContinue) {
 
                     //Running application
                     for (ActivityManager.RunningAppProcessInfo runningApp : activityManager.getRunningAppProcesses()) {
@@ -150,6 +184,7 @@ public class RecordService extends Service {
 
                     //CPU
                     //FIXME : a implementer
+                    getCpuInfo();
 
                     //Wifi
                     WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -169,9 +204,17 @@ public class RecordService extends Service {
                         sb.append("\n").append("airplane mode enabled ? ").append(isAirPlaneModeEnabled);
                     }
 
+                    //light sensor ( Illuminance )
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                        //non disponible avant Android API 3 : https://developer.android.com/reference/android/hardware/Sensor.html#TYPE_LIGHT
 
 
-                    Log.d(TAG, sb.toString());
+                        sb.append("\n").append("ambiant light level : ").append(sensorLight.getResolution()).append(" lx (max : ").append(sensorLight.getMaximumRange());
+
+                    }
+
+                    writeToFile(outputStream, sb.toString());
 
                     //Clean stringBuilder for next loop (performance)
                     sb.delete(0, sb.length());
@@ -182,6 +225,13 @@ public class RecordService extends Service {
                         e.printStackTrace();
                     }
                 }
+
+                //when the thread is stopped, we have to close the outputStream
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    Log.e(TAG, "impossible to close outputStream : " + e);
+                }
             }
         };
         new Thread(runnable).start();
@@ -191,6 +241,85 @@ public class RecordService extends Service {
         return bytes / BYTES_TO_MO;
     }
 
+    private void writeToFile(FileOutputStream outputStream, String stringToWrite) {
+        Log.d(TAG, "stringToWrite =" + stringToWrite);
+
+        try {
+            if (stringToWrite == null) {
+                Log.w(TAG, "no stringToWrite");
+                return;
+            }
+
+            outputStream.write(stringToWrite.getBytes());
+        } catch (IOException e) {
+            Log.e(TAG, "error in writeToFile:" + e);
+        }
+    }
+
+    private String readFile(File fileToRead, boolean addNewLineChar) {
+        StringBuilder sb = new StringBuilder();
+        Log.d(TAG, "fileToRead =" + fileToRead);
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(fileToRead));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                if (addNewLineChar) {
+                    sb.append('\n');
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            Log.e(TAG, "error in readFile:" + e);
+        }
+
+        return sb.toString();
+    }
+
+    private List<CpuInfo> getCpuInfo() {
+        Log.d(TAG, "IN - getCpuInfo");//FIXME: to remove
+        // nbCpu may change !
+        // cf : https://developer.android.com/reference/java/lang/Runtime.html#availableProcessors()
+        int nbCpu = Runtime.getRuntime().availableProcessors();
+        Log.d(TAG, "nbCpu :" + nbCpu);
+
+        List<CpuInfo> lstCpuInfo = new ArrayList<>(nbCpu);
+
+        for (int i = 0; i < nbCpu; i++) {
+            Log.d(TAG, "cur Cpu number :" + i);
+
+            File cpuInfoMinFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_min_freq");
+            String cpuInfoMinFreqString = readFile(cpuInfoMinFreqFile, false);
+            Log.d(TAG, "cpuInfoMinFreqString:" + cpuInfoMinFreqString);
+            int cpuInfoMinFreq = isNullOrEmpty(cpuInfoMinFreqString) ? 0 : Integer.parseInt(cpuInfoMinFreqString);
+
+            File cpuInfoMaxFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/cpuinfo_max_freq");
+            String cpuInfoMaxFreqString = readFile(cpuInfoMaxFreqFile, false);
+            Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
+            int cpuInfoMaxFreq = isNullOrEmpty(cpuInfoMaxFreqString) ? 0 : Integer.parseInt(cpuInfoMaxFreqString);
+
+            File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu" + i + "/cpufreq/scaling_cur_freq");
+            String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
+            Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
+            int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
+
+            CpuInfo curCpuInfo = new CpuInfo(cpuInfoMinFreq, cpuInfoMaxFreq, cpuInfoCurFreq);
+
+            lstCpuInfo.add(curCpuInfo);
+        }
+
+        return lstCpuInfo;
+    }
+
+    private boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
+
+    private float convertHzToGhz(int hz) {
+        return hz / HZ_TO_GHZ;
+    }
 
     /**
      * Class for clients to access.  Because we know this service always
