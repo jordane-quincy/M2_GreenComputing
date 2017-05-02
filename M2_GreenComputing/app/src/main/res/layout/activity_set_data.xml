@@ -9,20 +9,20 @@
             android:layout_height="match_parent" >
 
             <Button
-                android:text="Decrease sound"
+                android:id="@+id/decrease_sound_button"
+                style="@android:style/Widget.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/decrease_sound_button"
-                style="@android:style/Widget.Button" />
+                android:text="Decrease sound" />
 
             <Button
-                android:text="Increase sound"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/increase_sound_button"
                 style="@android:style/Widget.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
                 android:layout_row="0"
-                android:layout_column="1" />
+                android:text="Increase sound" />
         </TableRow>
 
     <TableRow
@@ -30,20 +30,20 @@
         android:layout_height="match_parent" >
 
         <Button
-            android:text="Decrease lights"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/decrease_lights_button"
             style="@android:style/Widget.Button"
-            android:layout_row="0"
-            android:layout_column="0" />
-
-        <Button
-            android:text="Increase lights"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:text="Decrease lights" />
+
+        <Button
             android:id="@+id/increase_lights_button"
-            style="@android:style/Widget.Button" />
+            style="@android:style/Widget.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Increase lights" />
     </TableRow>
 
     <TableRow
@@ -51,40 +51,40 @@
         android:layout_height="match_parent" >
 
         <Button
-            android:text="Position"
+            android:id="@+id/position_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/position_button"
-            style="@android:style/Widget.Button" />
+            android:text="Position" />
 
         <Button
-            android:text="Wi-Fi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/wifi_button"
             style="@android:style/Widget.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
             android:layout_row="0"
-            android:layout_column="1" />
+            android:text="Wi-Fi" />
     </TableRow>
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
         <Button
-            android:text="Bluetooh"
+            android:id="@+id/bluetooth_button"
+            style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bluetooth_button"
-            style="@android:style/Widget.Button" />
+            android:text="Bluetooh" />
 
         <Button
-            android:text="Mobile data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/mobile_data_button"
             style="@android:style/Widget.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
             android:layout_row="0"
-            android:layout_column="1" />
+            android:text="Mobile data" />
     </TableRow>
     <TableRow
         android:layout_width="match_parent"
@@ -92,9 +92,22 @@
 
 
         <TextView
-            android:text="info"
+            android:id="@+id/info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/info_text" />
+            android:text="info" />
     </TableRow>
+
+     <TableRow
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+
+         <SeekBar
+             android:id="@+id/seekBarBrightness"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:max="255"
+             android:progress="1" />
+
+     </TableRow>
     </TableLayout>

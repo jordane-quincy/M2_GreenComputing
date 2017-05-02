@@ -1,7 +1,10 @@
 package com.github.jordane_quincy.m2_greencomputing;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -18,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +41,28 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private static int getBrightness(Context context) {
+        int brightnessValue = 255;
+
+        try {
+            brightnessValue = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+        } catch (Settings.SettingNotFoundException e) {
+            Log.e(TAG, "getBrightness :" + e);
+        }
+
+        return brightnessValue;
+    }
+
+    private static void setBrightness(Context context, int brightnessValue) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+
+            Settings.System.putInt(context.getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        }
+
+        Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightnessValue);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -176,6 +201,39 @@ public class MainActivity extends AppCompatActivity {
                 break;
                 case 2:
                     view = inflater.inflate(R.layout.activity_set_data, container, false);
+
+                    SeekBar seekBarBrightness = (SeekBar) view.findViewById(R.id.seekBarBrightness);
+
+                    final int BRIGHTNESS_MIN = 1;
+                    final int BRIGHTNESS_STEP = 1;
+                    final int BRIGHTNESS_MAX = 255;
+
+                    seekBarBrightness.setMax((BRIGHTNESS_MAX - BRIGHTNESS_MIN) / BRIGHTNESS_STEP);
+
+                    // set le seekbar progress to current brighness
+                    seekBarBrightness.setProgress(getBrightness(getContext()));
+
+                    seekBarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress,
+                                                      boolean fromUser) {
+                            int brightnessValue = BRIGHTNESS_MIN + (progress * BRIGHTNESS_STEP);
+                            Log.d(TAG, "brightnessValue :" + brightnessValue);
+
+                            setBrightness(getContext(), brightnessValue);
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
+
+                    });
+
+
                 break;
             }
             return view;
