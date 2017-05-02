@@ -296,13 +296,8 @@ public class RecordService extends Service {
 //        Log.d(TAG, "cpuInfoMaxFreqString:" + cpuInfoMaxFreqString);
         int cpuInfoMaxFreq = isNullOrEmpty(cpuInfoMaxFreqString) ? 0 : Integer.parseInt(cpuInfoMaxFreqString);
 
-        File cpuInfoCurFreqFile = new File("/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq");
-        String cpuInfoCurFreqString = readFile(cpuInfoCurFreqFile, false);
-//        Log.d(TAG, "cpuInfoCurFreqString:" + cpuInfoCurFreqString);
-        int cpuInfoCurFreq = isNullOrEmpty(cpuInfoCurFreqString) ? 0 : Integer.parseInt(cpuInfoCurFreqString);
-
-
-        CpuInfo cpuInfo = new CpuInfo(cpuInfoMinFreq, cpuInfoMaxFreq, cpuInfoCurFreq);
+        // avoid duplication :cpuInfoCurFreq will be set by updateCpuInfo()
+        CpuInfo cpuInfo = new CpuInfo(cpuInfoMinFreq, cpuInfoMaxFreq, 0);
 
         return cpuInfo;
     }
