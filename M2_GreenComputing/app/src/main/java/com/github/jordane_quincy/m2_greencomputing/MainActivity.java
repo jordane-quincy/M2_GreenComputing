@@ -2,6 +2,7 @@ package com.github.jordane_quincy.m2_greencomputing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -64,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
         Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, brightnessValue);
     }
 
+    private static void adjustVolume(Context context, boolean isVolumeMustBeLower) {
+        Log.d(TAG, "adjustVolume :" + isVolumeMustBeLower);
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        //TODO : a voir s'il faut aussi afficher le " toast containing the current volume. " via
+        // AudioManager.FLAG_PLAY_SOUND + AudioManager.FLAG_SHOW_UI
+        audioManager.adjustVolume(isVolumeMustBeLower ? AudioManager.ADJUST_LOWER : AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
 //                info_text.setText("decrease");
 //            }
 //        });
-        Button increase_sound_button = (Button) findViewById(R.id.increase_sound_button);
-        Button decrease_lights_button = (Button) findViewById(R.id.decrease_lights_button);
-        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
+//        Button increase_sound_button = (Button) findViewById(R.id.increase_sound_button);
+//        Button decrease_lights_button = (Button) findViewById(R.id.decrease_lights_button);
+//        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
         Button position_button = (Button) findViewById(R.id.position_button);
         Button wifi_button = (Button) findViewById(R.id.wifi_button);
         Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
@@ -231,6 +242,21 @@ public class MainActivity extends AppCompatActivity {
                         public void onStartTrackingTouch(SeekBar seekBar) {
                         }
 
+                    });
+
+
+                    Button increaseSoundButton = (Button) view.findViewById(R.id.increase_sound_button);
+                    increaseSoundButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            adjustVolume(getContext(), false);
+                        }
+                    });
+
+                    Button decreaseSoundButton = (Button) view.findViewById(R.id.decrease_sound_button);
+                    decreaseSoundButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            adjustVolume(getContext(), true);
+                        }
                     });
 
 
