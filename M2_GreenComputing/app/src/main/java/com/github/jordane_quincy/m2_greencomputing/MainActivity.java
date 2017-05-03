@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+
     private static int getBrightness(Context context) {
         int brightnessValue = 255;
 
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private static void BluetoothToggleState() {
+    private static void bluetoothToggleState() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
@@ -92,6 +95,17 @@ public class MainActivity extends AppCompatActivity {
             bluetoothAdapter.enable();
         }
 
+    }
+
+    private static void wifiToggleState(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+        if (wifiManager == null) {
+            Log.e(TAG, "Wifi is not supported on this hardware platform.");
+            return;
+        }
+
+        wifiManager.setWifiEnabled(!wifiManager.isWifiEnabled());
     }
 
     @Override
@@ -140,7 +154,26 @@ public class MainActivity extends AppCompatActivity {
         Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
 
 
+        askRuntimePermissions();
 
+    }
+
+    private void askRuntimePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getApplicationContext())) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        askRuntimePermissions();
     }
 
     @Override
@@ -279,10 +312,18 @@ public class MainActivity extends AppCompatActivity {
                     });
 
 
-                    Button bluetooth_button = (Button) view.findViewById(R.id.bluetooth_button);
-                    bluetooth_button.setOnClickListener(new View.OnClickListener() {
+                    Button bluetoothButton = (Button) view.findViewById(R.id.bluetooth_button);
+                    bluetoothButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
-                            BluetoothToggleState();
+                            bluetoothToggleState();
+                        }
+                    });
+
+
+                    Button wifiButton = (Button) view.findViewById(R.id.wifi_button);
+                    wifiButton.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            wifiToggleState(getContext());
                         }
                     });
 
