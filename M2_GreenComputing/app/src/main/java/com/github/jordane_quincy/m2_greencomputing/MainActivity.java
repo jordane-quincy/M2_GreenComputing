@@ -1,5 +1,6 @@
 package com.github.jordane_quincy.m2_greencomputing;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -75,6 +76,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private static void BluetoothToggleState() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (bluetoothAdapter == null) {
+            Log.e(TAG, "Bluetooth is not supported on this hardware platform.");
+            return;
+        }
+
+        if (bluetoothAdapter.isEnabled()) {
+//            Log.d(TAG, "Bluetooth disable");
+            bluetoothAdapter.disable();
+        } else {
+//            Log.d(TAG, "Bluetooth enable");
+            bluetoothAdapter.enable();
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 //        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
         Button position_button = (Button) findViewById(R.id.position_button);
         Button wifi_button = (Button) findViewById(R.id.wifi_button);
-        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
+//        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
         Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
 
 
@@ -260,7 +279,15 @@ public class MainActivity extends AppCompatActivity {
                     });
 
 
-                break;
+                    Button bluetooth_button = (Button) view.findViewById(R.id.bluetooth_button);
+                    bluetooth_button.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            BluetoothToggleState();
+                        }
+                    });
+
+
+                    break;
             }
             return view;
         }
