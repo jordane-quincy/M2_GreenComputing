@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -197,6 +198,11 @@ public class RecordService extends Service {
                         boolean isMobileNetworkConnected = Settings.Global.getInt(getContentResolver(), "mobile_data", 0) == 1;
                         sb.append("\n").append("mobile network enabled ? ").append(isMobileNetworkConnected);
                     }
+
+                    //Bluetooth
+                    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    sb.append("\n").append("Bluetooth enabled ? ").append((bluetoothAdapter != null && bluetoothAdapter.isEnabled()));
+
 
                     //flight mode
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
