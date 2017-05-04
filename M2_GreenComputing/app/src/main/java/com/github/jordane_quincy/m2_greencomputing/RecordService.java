@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -150,10 +151,13 @@ public class RecordService extends Service {
                 ActivityManager.RunningAppProcessInfo appForeground = null;
                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
 
+                LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
                 SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
                 Sensor sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
                 FileOutputStream outputStream = null;
@@ -192,11 +196,16 @@ public class RecordService extends Service {
                     updateCpuInfo();
                     sb.append("\n").append("cpuInfo : ").append(cpuInfo);
 
+                    //Location
+                    boolean isLocationEnabledGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    boolean isLocationEnabledNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+                    boolean isLocationEnabledPassive = locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
+                    sb.append("\n").append("location ").append("GPS ? ").append(isLocationEnabledGps).append(", network ? ").append(isLocationEnabledNetwork).append(", passive ? ").append(isLocationEnabledPassive);
+
                     //Wifi
                     sb.append("\n").append("wifi enabled ? ").append(wifiManager.isWifiEnabled());
 
                     //mobile data : 3g/4g
-                    ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE); //TODO; deprecated >= api 23
                     sb.append("\n").append(mobileNetworkInfo.getTypeName()).append(" : ").append(mobileNetworkInfo.isAvailable()).append(" ").append(mobileNetworkInfo.isConnected());
 
@@ -212,14 +221,11 @@ public class RecordService extends Service {
                     }
 
                     //light sensor ( Illuminance )
-
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
                         //non disponible avant Android API 3 : https://developer.android.com/reference/android/hardware/Sensor.html#TYPE_LIGHT
-
-
                         sb.append("\n").append("ambiant light level : ").append(sensorLight.getResolution()).append(" lx (max : ").append(sensorLight.getMaximumRange());
-
                     }
+
 
                     writeToFile(outputStream, sb.toString());
 
@@ -251,15 +257,18 @@ public class RecordService extends Service {
     private void writeToFile(FileOutputStream outputStream, String stringToWrite) {
         Log.d(TAG, "stringToWrite =" + stringToWrite);
 
-        try {
-            if (stringToWrite == null) {
-                Log.w(TAG, "no stringToWrite");
-                return;
-            }
+        //outputStream creation could fail during init
+        if (outputStream != null) {
+            try {
+                if (stringToWrite == null) {
+                    Log.w(TAG, "no stringToWrite");
+                    return;
+                }
 
-            outputStream.write(stringToWrite.getBytes());
-        } catch (IOException e) {
-            Log.e(TAG, "error in writeToFile:" + e);
+                outputStream.write(stringToWrite.getBytes());
+            } catch (IOException e) {
+                Log.e(TAG, "error in writeToFile:" + e);
+            }
         }
     }
 
