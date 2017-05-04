@@ -9,8 +9,6 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -126,31 +124,17 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         /////////////////////////////////SetData Activity//////////////////////////////////
-//        FIXME: @MaD : l'activity crash si ce bout de code est décommenté.
 //        Button decrease_sound_button = (Button) findViewById(R.id.decrease_sound_button);
-//        decrease_sound_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                TextView info_text = (TextView) findViewById(R.id.info_text);
-//                info_text.setText("decrease");
-//            }
-//        });
 //        Button increase_sound_button = (Button) findViewById(R.id.increase_sound_button);
 //        Button decrease_lights_button = (Button) findViewById(R.id.decrease_lights_button);
 //        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
+        //FIXME: implement position button
         Button position_button = (Button) findViewById(R.id.position_button);
-        Button wifi_button = (Button) findViewById(R.id.wifi_button);
+//        Button wifi_button = (Button) findViewById(R.id.wifi_button);
 //        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
+        //FIXME: implement mobile data button
         Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
 
 
@@ -166,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
+
+            //FIXME: ask other runtime permissions
         }
     }
 
@@ -191,9 +177,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
