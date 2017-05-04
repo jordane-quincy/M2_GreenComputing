@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
@@ -150,6 +152,9 @@ public class RecordService extends Service {
 
                 SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
                 Sensor sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
 
                 FileOutputStream outputStream = null;
                 try {
@@ -187,21 +192,16 @@ public class RecordService extends Service {
                     updateCpuInfo();
                     sb.append("\n").append("cpuInfo : ").append(cpuInfo);
 
-
                     //Wifi
-                    WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     sb.append("\n").append("wifi enabled ? ").append(wifiManager.isWifiEnabled());
 
                     //mobile data : 3g/4g
-                    //FIXME: ne fonctionne pas
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        boolean isMobileNetworkConnected = Settings.Global.getInt(getContentResolver(), "mobile_data", 0) == 1;
-                        sb.append("\n").append("mobile network enabled ? ").append(isMobileNetworkConnected);
-                    }
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE); //TODO; deprecated >= api 23
+                    sb.append("\n").append(mobileNetworkInfo.getTypeName()).append(" : ").append(mobileNetworkInfo.isAvailable()).append(" ").append(mobileNetworkInfo.isConnected());
 
                     //Bluetooth
-                    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    sb.append("\n").append("Bluetooth enabled ? ").append((bluetoothAdapter != null && bluetoothAdapter.isEnabled()));
+                    sb.append("\n").append("bluetooth enabled ? ").append((bluetoothAdapter != null && bluetoothAdapter.isEnabled()));
 
 
                     //flight mode
