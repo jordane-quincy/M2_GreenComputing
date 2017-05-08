@@ -24,6 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -104,6 +110,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         wifiManager.setWifiEnabled(!wifiManager.isWifiEnabled());
+    }
+
+    private static void readLogFile(final Context context, final TextView textViewToUpdate) {
+        try {
+            File recordFile = new File(context.getFilesDir(), "recordServiceFile.txt");
+            Log.d(TAG, "log file : " + recordFile);
+
+            long recordFileLength = recordFile.length();
+
+            FileInputStream inputStream = new FileInputStream(recordFile);
+            BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+
+            StringBuilder total = new StringBuilder();
+            String line;
+            while ((line = r.readLine()) != null) {
+                total.append(line).append('\n');
+            }
+
+            textViewToUpdate.setText(total);
+
+        } catch (Exception e) {
+            Log.e(TAG, "impossible to read logs " + e);
+        }
     }
 
     @Override
@@ -242,6 +271,35 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "serviceCorrectlyStopped ? " + serviceCorrectlyStopped);
                 }
             });
+
+            final TextView logs = (TextView) view.findViewById(R.id.logs);
+            Button btnReadLog = (Button) view.findViewById(R.id.btnReadLog);
+            btnReadLog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d(TAG, "btnReadLog onClick");
+
+                    readLogFile(getContext(), logs);
+                }
+
+            });
+
+
+//            Thread timer = new Thread(){
+//                public void run(){
+//                    while(CONTINUE_AUTO_REFRESH_LOG){
+//                        try{
+//                            sleep(5000);
+//
+//                            readLogFile(getContext(), logs);
+//                        } catch (InterruptedException e){
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            };
+//            timer.start();
+
 
             switch(section)
             {

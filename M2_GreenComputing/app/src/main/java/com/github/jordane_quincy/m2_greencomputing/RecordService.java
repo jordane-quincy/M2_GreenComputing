@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Debug;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -148,6 +149,8 @@ public class RecordService extends Service {
             @Override
             public void run() {
                 StringBuilder sb = new StringBuilder();
+                String[] infos = new String[16];
+
                 ActivityManager.RunningAppProcessInfo appForeground = null;
                 ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
 
@@ -165,7 +168,7 @@ public class RecordService extends Service {
                     File recordFile = new File(getApplicationContext().getFilesDir(), "recordServiceFile.txt");
                     Log.d(TAG, "create recordFile : " + recordFile);
 
-                    outputStream = new FileOutputStream(recordFile, true); //append mode
+                    outputStream = new FileOutputStream(recordFile, false); //not in append mode
                 } catch (Exception e) {
                     Log.e(TAG, "impossible to create FileOutputStream " + e);
                 }
@@ -177,6 +180,7 @@ public class RecordService extends Service {
                         if (ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND == runningApp.importance) {
                             appForeground = runningApp;
                             sb.append("\n").append("appForeground : ").append(appForeground.processName);
+                            infos[0] = appForeground.processName;
                             break;
                         }
                     }
@@ -185,32 +189,44 @@ public class RecordService extends Service {
                     activityManager.getMemoryInfo(memoryInfo);
 
                     sb.append("\n").append("availMem : ").append(memoryInfo.availMem);
+                    infos[1] = String.valueOf(memoryInfo.availMem);
                     sb.append(" (").append(convertbytesToMo(memoryInfo.availMem)).append(" Mo)");
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         //non disponible avant Android API 16
                         sb.append("\n").append("totalMem : ").append(memoryInfo.totalMem);
+                        infos[2] = String.valueOf(memoryInfo.totalMem);
                     }
 
                     //CPU
                     updateCpuInfo();
                     sb.append("\n").append("cpuInfo : ").append(cpuInfo);
+                    infos[3] = String.valueOf(cpuInfo.getMinFreq());
+                    infos[4] = String.valueOf(cpuInfo.getMaxFreq());
+                    infos[5] = String.valueOf(cpuInfo.getCurFreq());
 
                     //Location
                     boolean isLocationEnabledGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     boolean isLocationEnabledNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
                     boolean isLocationEnabledPassive = locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
                     sb.append("\n").append("location ").append("GPS ? ").append(isLocationEnabledGps).append(", network ? ").append(isLocationEnabledNetwork).append(", passive ? ").append(isLocationEnabledPassive);
+                    infos[6] = String.valueOf(isLocationEnabledGps);
+                    infos[7] = String.valueOf(isLocationEnabledNetwork);
+                    infos[8] = String.valueOf(isLocationEnabledPassive);
 
                     //Wifi
                     sb.append("\n").append("wifi enabled ? ").append(wifiManager.isWifiEnabled());
+                    infos[9] = String.valueOf(wifiManager.isWifiEnabled());
 
                     //mobile data : 3g/4g
                     NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE); //TODO; deprecated >= api 23
                     sb.append("\n").append(mobileNetworkInfo.getTypeName()).append(" : ").append(mobileNetworkInfo.isAvailable()).append(" ").append(mobileNetworkInfo.isConnected());
+                    infos[10] = String.valueOf(mobileNetworkInfo.isAvailable());
+                    infos[11] = String.valueOf(mobileNetworkInfo.isConnected());
 
                     //Bluetooth
                     sb.append("\n").append("bluetooth enabled ? ").append((bluetoothAdapter != null && bluetoothAdapter.isEnabled()));
+                    infos[12] = String.valueOf(bluetoothAdapter != null && bluetoothAdapter.isEnabled());
 
 
                     //flight mode
@@ -218,16 +234,19 @@ public class RecordService extends Service {
                         //non disponible avant Android API 17 : https://developer.android.com/reference/android/provider/Settings.Global.html#AIRPLANE_MODE_ON
                         boolean isAirPlaneModeEnabled = Settings.Global.getInt(getContentResolver(), android.provider.Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
                         sb.append("\n").append("airplane mode enabled ? ").append(isAirPlaneModeEnabled);
+                        infos[13] = String.valueOf(isAirPlaneModeEnabled);
                     }
 
                     //light sensor ( Illuminance )
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
                         //non disponible avant Android API 3 : https://developer.android.com/reference/android/hardware/Sensor.html#TYPE_LIGHT
                         sb.append("\n").append("ambiant light level : ").append(sensorLight.getResolution()).append(" lx (max : ").append(sensorLight.getMaximumRange());
+                        infos[14] = String.valueOf(sensorLight.getResolution());
+                        infos[15] = String.valueOf(sensorLight.getMaximumRange());
                     }
 
 
-                    writeToFile(outputStream, sb.toString());
+                    writeToFile(outputStream, sb.toString(), infos);
 
                     //Clean stringBuilder for next loop (performance)
                     sb.delete(0, sb.length());
@@ -254,8 +273,11 @@ public class RecordService extends Service {
         return bytes / BYTES_TO_MO;
     }
 
-    private void writeToFile(FileOutputStream outputStream, String stringToWrite) {
+    private void writeToFile(FileOutputStream outputStream, String stringToWrite, String[] infosArr) {
         Log.d(TAG, "stringToWrite =" + stringToWrite);
+
+        String infos = TextUtils.join(",", infosArr) + '\n';
+        Log.e(TAG, "infos = " + infos);
 
         //outputStream creation could fail during init
         if (outputStream != null) {
@@ -265,7 +287,8 @@ public class RecordService extends Service {
                     return;
                 }
 
-                outputStream.write(stringToWrite.getBytes());
+//                outputStream.write(stringToWrite.getBytes());
+                outputStream.write(infos.getBytes());
             } catch (IOException e) {
                 Log.e(TAG, "error in writeToFile:" + e);
             }

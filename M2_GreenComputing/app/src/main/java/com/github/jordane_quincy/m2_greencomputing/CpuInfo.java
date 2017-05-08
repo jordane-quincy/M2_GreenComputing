@@ -15,12 +15,24 @@ public class CpuInfo {
         this.curFreq = curFreq;
     }
 
+    public int getMinFreq() {
+        return minFreq;
+    }
+
     public void setMinFreq(int minFreq) {
         this.minFreq = minFreq;
     }
 
+    public int getMaxFreq() {
+        return maxFreq;
+    }
+
     public void setMaxFreq(int maxFreq) {
         this.maxFreq = maxFreq;
+    }
+
+    public int getCurFreq() {
+        return curFreq;
     }
 
     public void setCurFreq(int curFreq) {
