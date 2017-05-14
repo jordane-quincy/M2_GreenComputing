@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -30,6 +31,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -112,6 +116,31 @@ public class MainActivity extends AppCompatActivity {
         wifiManager.setWifiEnabled(!wifiManager.isWifiEnabled());
     }
 
+    private static void dataToggleState(Context context) {
+        try {
+            final ConnectivityManager conman = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            final Class conmanClass = Class.forName(conman.getClass().getName());
+            final Field connectivityManagerField = conmanClass.getDeclaredField("mService");
+            connectivityManagerField.setAccessible(true);
+            final Object connectivityManager = connectivityManagerField.get(conman);
+            final Class connectivityManagerClass = Class.forName(connectivityManager.getClass().getName());
+
+
+            final Method getMobileDataEnabledMethod = connectivityManagerClass.getDeclaredMethod("getMobileDataEnabled");
+            getMobileDataEnabledMethod.setAccessible(true);
+            boolean isDataEnabled = (boolean) getMobileDataEnabledMethod.invoke(connectivityManager);
+            Log.d(TAG, "dataToggleState isDataEnabled ? " + isDataEnabled);
+
+            final Method setMobileDataEnabledMethod = connectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", Boolean.TYPE);
+            setMobileDataEnabledMethod.setAccessible(true);
+            setMobileDataEnabledMethod.invoke(connectivityManager, !isDataEnabled);
+
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            //FIXME : Ces méthodes ne sont utilisables jusque android kitkat mais pas de tél android marshmallow pour tenter mieux
+            Log.e(TAG, "Error during dataToggleState :" + e);
+        }
+    }
+
     private static void readLogFile(final Context context, final TextView textViewToUpdate) {
         try {
             File recordFile = new File(context.getFilesDir(), "recordServiceFile.txt");
@@ -163,8 +192,7 @@ public class MainActivity extends AppCompatActivity {
         Button position_button = (Button) findViewById(R.id.position_button);
 //        Button wifi_button = (Button) findViewById(R.id.wifi_button);
 //        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
-        //FIXME: implement mobile data button
-        Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
+//        Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
 
 
         askRuntimePermissions();
@@ -368,6 +396,13 @@ public class MainActivity extends AppCompatActivity {
                     wifiButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             wifiToggleState(getContext());
+                        }
+                    });
+
+                    Button mobile_data_button = (Button) view.findViewById(R.id.mobile_data_button);
+                    mobile_data_button.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            dataToggleState(getContext());
                         }
                     });
 

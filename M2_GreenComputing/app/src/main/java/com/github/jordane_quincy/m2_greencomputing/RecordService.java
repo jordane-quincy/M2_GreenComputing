@@ -219,7 +219,7 @@ public class RecordService extends Service {
                     infos[9] = String.valueOf(wifiManager.isWifiEnabled());
 
                     //mobile data : 3g/4g
-                    NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE); //TODO; deprecated >= api 23
+                    NetworkInfo mobileNetworkInfo = connectivityManager.getNetworkInfo(connectivityManager.TYPE_MOBILE); //TODO: deprecated >= api 23
                     sb.append("\n").append(mobileNetworkInfo.getTypeName()).append(" : ").append(mobileNetworkInfo.isAvailable()).append(" ").append(mobileNetworkInfo.isConnected());
                     infos[10] = String.valueOf(mobileNetworkInfo.isAvailable());
                     infos[11] = String.valueOf(mobileNetworkInfo.isConnected());
