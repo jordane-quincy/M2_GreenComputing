@@ -25,45 +25,46 @@
                 android:text="Increase sound" />
         </TableRow>
 
+    <!--<TableRow-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" >-->
+
+    <!--<Button-->
+    <!--android:id="@+id/decrease_lights_button"-->
+    <!--style="@android:style/Widget.Button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="0"-->
+    <!--android:layout_row="0"-->
+    <!--android:text="Decrease lights" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/increase_lights_button"-->
+    <!--style="@android:style/Widget.Button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Increase lights" />-->
+    <!--</TableRow>-->
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <Button
-            android:id="@+id/decrease_lights_button"
-            style="@android:style/Widget.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:text="Decrease lights" />
-
-        <Button
-            android:id="@+id/increase_lights_button"
-            style="@android:style/Widget.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Increase lights" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <Button
-            android:id="@+id/position_button"
-            style="@android:style/Widget.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Position" />
+        <!--<Button-->
+        <!--android:id="@+id/position_button"-->
+        <!--style="@android:style/Widget.Button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Position" />-->
 
         <Button
             android:id="@+id/wifi_button"
             style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
+            android:layout_column="0"
             android:layout_row="0"
+            android:layout_span="2"
             android:text="Wi-Fi" />
     </TableRow>
     <TableRow
@@ -95,7 +96,7 @@
             android:id="@+id/info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="info" />
+            android:text="Light level" />
     </TableRow>
 
      <TableRow
