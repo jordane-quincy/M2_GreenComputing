@@ -1,9 +1,22 @@
 <resources>
     <string name="app_name">M2_GreenComputing</string>
+
+    <string name="menuItemCollect">Collect</string>
+    <string name="menuItemAction">Action</string>
+    <string name="menuItemService">Service</string>
+
     <string name="serviceNotificationContent">Running</string>
     <string name="serviceNotificationTitle">GreenComputing_RecordService</string>
     <string name="serviceStoppedToast">RecordService stopped</string>
     <string name="serviceStop">Stop Service</string>
     <string name="serviceRefreshLog">Refresh Log</string>
     <string name="serviceLaunch">Launch Service</string>
+
+    <string name="actionLightLevel">Light level</string>
+    <string name="actionMobileData">Mobile data</string>
+    <string name="actionBluetooth">Bluetooth</string>
+    <string name="actionWifi">Wi-Fi</string>
+    <string name="actionSoundIncrease">Increase sound</string>
+    <string name="actionSoundDecrease">Decrease sound</string>
+
 </resources>

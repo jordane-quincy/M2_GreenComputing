@@ -4,58 +4,30 @@
         android:layout_height="match_parent"
      android:stretchColumns="1,1">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+     <TableRow
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/decrease_sound_button"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Decrease sound" />
+         <Button
+             android:id="@+id/decrease_sound_button"
+             style="@android:style/Widget.Button"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="@string/actionSoundDecrease" />
 
-            <Button
-                android:id="@+id/increase_sound_button"
-                style="@android:style/Widget.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_row="0"
-                android:text="Increase sound" />
-        </TableRow>
-
-    <!--<TableRow-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" >-->
-
-    <!--<Button-->
-    <!--android:id="@+id/decrease_lights_button"-->
-    <!--style="@android:style/Widget.Button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_column="0"-->
-    <!--android:layout_row="0"-->
-    <!--android:text="Decrease lights" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/increase_lights_button"-->
-    <!--style="@android:style/Widget.Button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Increase lights" />-->
-    <!--</TableRow>-->
+         <Button
+             android:id="@+id/increase_sound_button"
+             style="@android:style/Widget.Button"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_column="1"
+             android:layout_row="0"
+             android:text="@string/actionSoundIncrease" />
+     </TableRow>
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
-        <!--<Button-->
-        <!--android:id="@+id/position_button"-->
-        <!--style="@android:style/Widget.Button"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Position" />-->
 
         <Button
             android:id="@+id/wifi_button"
@@ -65,8 +37,9 @@
             android:layout_column="0"
             android:layout_row="0"
             android:layout_span="2"
-            android:text="Wi-Fi" />
+            android:text="@string/actionWifi" />
     </TableRow>
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -76,7 +49,7 @@
             style="@android:style/Widget.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bluetooh" />
+            android:text="@string/actionBluetooth" />
 
         <Button
             android:id="@+id/mobile_data_button"
@@ -85,20 +58,19 @@
             android:layout_height="wrap_content"
             android:layout_column="1"
             android:layout_row="0"
-            android:text="Mobile data" />
+            android:text="@string/actionMobileData" />
     </TableRow>
-    <TableRow
+
+     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
 
         <TextView
             android:id="@+id/info_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Light level" />
+            android:text="@string/actionLightLevel" />
     </TableRow>
-
      <TableRow
          android:layout_width="match_parent"
          android:layout_height="match_parent">
@@ -109,6 +81,5 @@
              android:layout_height="match_parent"
              android:max="255"
              android:progress="1" />
-
      </TableRow>
     </TableLayout>

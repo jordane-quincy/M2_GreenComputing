@@ -428,11 +428,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Collecter";
+                    return getText(R.string.menuItemCollect);
                 case 1:
-                    return "Agir";
+                    return getText(R.string.menuItemAction);
                 case 2:
-                    return "Service";
+                    return getText(R.string.menuItemService);
             }
             return null;
         }
