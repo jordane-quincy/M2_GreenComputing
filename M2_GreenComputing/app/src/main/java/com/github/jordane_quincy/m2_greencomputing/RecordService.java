@@ -59,24 +59,10 @@ public class RecordService extends Service {
     public void onCreate() {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        cpuInfo = initCpuInfo();
 
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle("getText(R.string.notification_title)")
-                .setContentText("getText(R.string.notification_message)")
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentIntent(pendingIntent)
-                .setTicker("getText(R.string.ticker_text)")
-                .build();
-
-        startForeground(NOTIFICATION, notification);
-
-        initLogging();
-
-        // Display a notification about us starting.  We put an icon in the status bar.
         showNotification();
-
     }
 
     @Override
@@ -99,7 +85,7 @@ public class RecordService extends Service {
         notificationManager.cancel(NOTIFICATION);
 
         // Tell the user we stopped.
-        Toast.makeText(this, "R.string.local_service_stopped", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getText(R.string.serviceStoppedToast), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -113,12 +99,11 @@ public class RecordService extends Service {
     private void showNotification() {
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                //new Intent(this, LocalServiceActivities.Controller.class), 0);
                 new Intent(this, MainActivity.class), 0);
 
         // Set the info for the views that show in the notification panel.
         Notification notification = new Notification.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)  // the status icon
+                .setSmallIcon(R.drawable.notification_icon_green)  // the status icon
                 .setTicker(getText(R.string.serviceNotificationTitle))  // the status text
                 .setWhen(System.currentTimeMillis())  // the time stamp
                 .setContentTitle(getText(R.string.serviceNotificationTitle))  // the label of the entry
@@ -128,13 +113,6 @@ public class RecordService extends Service {
 
         // Send the notification.
         notificationManager.notify(NOTIFICATION, notification);
-    }
-
-    private void initLogging() {
-        Log.d(TAG, "initLogging");
-        activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        cpuInfo = initCpuInfo();
-
     }
 
     private void launchLogging() {

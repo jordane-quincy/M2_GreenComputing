@@ -42,7 +42,7 @@
         android:gravity="bottom"
         android:scrollHorizontally="false"
         android:scrollbars="vertical"
-        android:text="TextView" />
+        android:text="" />
 
     <Button
         android:id="@+id/btnIntent"
