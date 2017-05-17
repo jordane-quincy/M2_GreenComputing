@@ -183,18 +183,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
 
-        /////////////////////////////////SetData Activity//////////////////////////////////
-//        Button decrease_sound_button = (Button) findViewById(R.id.decrease_sound_button);
-//        Button increase_sound_button = (Button) findViewById(R.id.increase_sound_button);
-//        Button decrease_lights_button = (Button) findViewById(R.id.decrease_lights_button);
-//        Button increase_lights_button = (Button) findViewById(R.id.increase_lights_button);
-//        //impossible d'implementer le position button car ce n'est plus possible sous android kitkat
-//        Button position_button = (Button) findViewById(R.id.position_button);
-//        Button wifi_button = (Button) findViewById(R.id.wifi_button);
-//        Button bluetooth_button = (Button) findViewById(R.id.bluetooth_button);
-//        Button mobile_data_button = (Button) findViewById(R.id.mobile_data_button);
-
-
         askRuntimePermissions();
 
     }

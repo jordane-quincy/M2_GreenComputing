@@ -51,14 +51,13 @@ public class RecordService extends Service {
     CpuInfo cpuInfo;
 
     boolean shouldContinue = true;
-    private NotificationManager mNM;
+    private NotificationManager notificationManager;
     // Unique Identification Number for the Notification.
-    // We use it on Notification start, and to cancel it.
-    private int NOTIFICATION = 42;//R.string.local_service_started;
+    private int NOTIFICATION = 42;
 
     @Override
     public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -71,7 +70,7 @@ public class RecordService extends Service {
                 .setTicker("getText(R.string.ticker_text)")
                 .build();
 
-        startForeground(42, notification);
+        startForeground(NOTIFICATION, notification);
 
         initLogging();
 
@@ -97,7 +96,7 @@ public class RecordService extends Service {
         shouldContinue = false;
 
         // Cancel the persistent notification.
-        mNM.cancel(NOTIFICATION);
+        notificationManager.cancel(NOTIFICATION);
 
         // Tell the user we stopped.
         Toast.makeText(this, "R.string.local_service_stopped", Toast.LENGTH_SHORT).show();
@@ -112,9 +111,6 @@ public class RecordService extends Service {
      * Show a notification while this service is running.
      */
     private void showNotification() {
-        // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = "Starteed"; //getText(R.string.local_service_started);
-
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 //new Intent(this, LocalServiceActivities.Controller.class), 0);
@@ -123,16 +119,15 @@ public class RecordService extends Service {
         // Set the info for the views that show in the notification panel.
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)  // the status icon
-                .setTicker(text)  // the status text
+                .setTicker(getText(R.string.serviceNotificationTitle))  // the status text
                 .setWhen(System.currentTimeMillis())  // the time stamp
-//                .setContentTitle(getText(R.string.local_service_label))  // the label of the entry
-                .setContentTitle("R.string.local_service_label")  // the label of the entry
-                .setContentText(text)  // the contents of the entry
+                .setContentTitle(getText(R.string.serviceNotificationTitle))  // the label of the entry
+                .setContentText(getText(R.string.serviceNotificationContent))  // the contents of the entry
                 .setContentIntent(contentIntent)  // The intent to send when the entry is clicked
                 .build();
 
         // Send the notification.
-        mNM.notify(NOTIFICATION, notification);
+        notificationManager.notify(NOTIFICATION, notification);
     }
 
     private void initLogging() {
