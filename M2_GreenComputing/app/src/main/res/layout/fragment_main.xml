@@ -20,7 +20,7 @@
         android:layout_below="@+id/section_label"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="33dp"
-        android:text="Stop Service" />
+        android:text="@string/serviceStop" />
 
     <Button
         android:id="@+id/btnReadLog"
@@ -29,7 +29,7 @@
         android:layout_below="@+id/btnStopService"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="Refresh Log" />
+        android:text="@string/serviceRefreshLog" />
 
     <TextView
         android:id="@+id/logs"
@@ -51,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="43dp"
-        android:text="launch service intent" />
+        android:text="@string/serviceLaunch" />
 
 
 </RelativeLayout>

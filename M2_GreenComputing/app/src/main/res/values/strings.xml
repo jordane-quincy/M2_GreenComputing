@@ -3,4 +3,7 @@
     <string name="serviceNotificationContent">Running</string>
     <string name="serviceNotificationTitle">GreenComputing_RecordService</string>
     <string name="serviceStoppedToast">RecordService stopped</string>
+    <string name="serviceStop">Stop Service</string>
+    <string name="serviceRefreshLog">Refresh Log</string>
+    <string name="serviceLaunch">Launch Service</string>
 </resources>
