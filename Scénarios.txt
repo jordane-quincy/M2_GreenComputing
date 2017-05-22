@@ -1,1 +1,5 @@
 On va mettre la liste des scénarios ici !
+
+JB : <Application SMS (CPU : 400mw, LCD : 600mW), Facebook, Email (CPU:  LCD : 700mW), Compte Bancaire, Musique, Runkeeper, >
+Jordane : <Email, Agenda, Jeux(casse-tête, pas d'internet), Application SMS, GPS, Application Horloge (pour chrono)>
+Maxime : 

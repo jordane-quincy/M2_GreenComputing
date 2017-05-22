@@ -1,0 +1,22 @@
+@relation customTP
+
+@attribute 'application1' {A,B,C,D,E,F,G}
+@attribute 'application2' {A,B,C,D,E,F,G}
+@attribute 'application3' {A,B,C,D,E,F,G}
+@attribute 'application4' {A,B,C,D,E,F,G}
+
+@data
+A,F,D,G
+E,G,C,D
+A,G,C,B
+D,E,F,G
+A,C,B,F
+B,C,G,F
+C,A,D,E
+G,D,C,B
+E,A,D,G
+C,F,B,D
+E,F,G,A
+E,A,F,G
+F,G,D,C
+D,A,E,C
