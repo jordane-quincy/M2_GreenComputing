@@ -1,0 +1,24 @@
+@relation donneesApp
+
+%Differenciation des jeu avec et sans internet
+@attribute 'application1' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application2' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application3' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application4' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application5' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application6' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application7' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+@attribute 'application8' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+
+@data
+Message,Email,Messenger,Facebook,Internet,Facebook,GameAI,Musique
+Musique,GameSI,Message,Game,Messenger,Facebook,Internet,PDFReader
+Email,Messenger,Facebook,Internet,Message,Game,Email,Message
+Musique,GPS,Email,Internet,PDFReader,Musique,Game,Email
+Musique,PDFReader,Facebook,Internet,PDFReader,Game,Email,Internet
+Game,Musique,PDFReader,Internet,Message,Messenger,GPS,Facebook
+Email,Internet,Musique,PDFReader,GPS,Internet,Message,Messenger
+Internet,Email,Facebook,Messenger,Game,Musique,GPS,Message
+Musique,Messenger,Facebook,Internet,Game,Musique,PDFReader,Email
+Email,Internet,Musique,PDFReader,Message,Internet,GPS,Messenger
+Musique,Game,Internet,Email,Facebook,Internet,GPS,Message
