@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.github.jordane_quincy.m2_greencomputing">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- change brightness -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- get bluetooth state -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- change bluetooth state -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- change wifi state -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- get mobile state -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- get location state -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- change mobile data state -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- Le receiver permet d'écouter l'intent broadcaster lors du démarrage du téléphone -->
+        <!-- NB : En dessous de Android API level 11 (Honeycomb), l'application doit être lancé une fois avant de recevoir l'intent-->
+        <receiver android:name="MyReceiver">
+            <intent-filter>
+                <!--Si l'application a été installé sur la partition système-->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!--Si l'application a été installé sur la carte SD-->
+                <!--FIXME: Non testé pour le moment-->
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
+        <!--Le service -->
+        <!-- android:process : The ':' prefix appends the name to your package's standard process name.  -->
+        <service
+            android:name=".RecordService"
+            android:process=":RecordServiceProcess">
+        </service>
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
