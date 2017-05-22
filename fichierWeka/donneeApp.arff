@@ -1,24 +1,38 @@
 @relation donneesApp
 
-%Differenciation des jeu avec et sans internet
-@attribute 'application1' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application2' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application3' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application4' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application5' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application6' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application7' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
-@attribute 'application8' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Maps}
+%Differenciation des jeux avec et sans internet.
+%GAP signifie qu'il y a un gros temps idle ou sans lancement d'une nouvelle application pendant un certains temps.
+
+@attribute 'application1' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application2' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application3' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application4' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application5' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application6' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application7' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
+@attribute 'application8' {Facebook,Message,Messenger,Email,Internet,PDFReader,GameSI,GameAI,Musique,GPS,PlayStoreUpdates,Contacts,Call,Camera,GAP}
 
 @data
 Message,Email,Messenger,Facebook,Internet,Facebook,GameAI,Musique
-Musique,GameSI,Message,Game,Messenger,Facebook,Internet,PDFReader
-Email,Messenger,Facebook,Internet,Message,Game,Email,Message
-Musique,GPS,Email,Internet,PDFReader,Musique,Game,Email
-Musique,PDFReader,Facebook,Internet,PDFReader,Game,Email,Internet
-Game,Musique,PDFReader,Internet,Message,Messenger,GPS,Facebook
-Email,Internet,Musique,PDFReader,GPS,Internet,Message,Messenger
-Internet,Email,Facebook,Messenger,Game,Musique,GPS,Message
-Musique,Messenger,Facebook,Internet,Game,Musique,PDFReader,Email
+Musique,GameSI,Message,GameSI,GAP,Facebook,Internet,PDFReader
+Email,Messenger,Facebook,Internet,Message,GameSI,Email,Message
+Musique,GPS,Email,Internet,PDFReader,Musique,GameSI,GAP
+Musique,PDFReader,Facebook,Internet,PDFReader,GameSI,Email,PDFReader
+GameAI,Musique,PDFReader,Internet,Message,Messenger,GPS,Facebook
+Email,PDFReader,Internet,Musique,PDFReader,GPS,Internet,Message
+Internet,Email,Facebook,Messenger,GameAI,Musique,GAP,Message
+Internet,Email,Facebook,Messenger,GameAI,GPS,Musique,GAP
+Musique,Messenger,Facebook,Internet,GameAI,Musique,Email,PDFReader
 Email,Internet,Musique,PDFReader,Message,Internet,GPS,Messenger
-Musique,Game,Internet,Email,Facebook,Internet,GPS,Message
+Musique,GameSI,Internet,Email,Facebook,Internet,GPS,Message
+GameAI,Message,GameAI,Message,Call,Internet,Message,GAP
+Contact,Call,Musique,GAP,Camera,GAP,Message,Facebook
+GPS,Musique,GPS,GAP,Camera,Message,Facebook,Camera
+Musique,GAP,Contacts,Call,GPS,Internet,GPS,GAP
+Musique,GPS,GAP,Message,Messenger,Musique,GameSI,Message
+GPS,GAP,Message,GPS,GAP,Camera,Message,Call
+PlayStoreUpdates,Musique,Message,Facebook,Camera,Message,Message,Call
+Message,Message,Facebook,GameAI,Internet,GameAI,Internet,Facebook
+PlayStoreUpdates,GameSI,GAP,Camera,GAP,PlayStoreUpdates,Musique,GAP
+PlayStoreUpdates,GAP,Musique,PDFReader,Email,Messenger,Facebook,GameAI
+GameAI,PlayStoreUpdates,GAP,Internet,Camera,Internet,Message,Facebook
