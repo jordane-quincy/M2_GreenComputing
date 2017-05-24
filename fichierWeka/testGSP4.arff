@@ -1,0 +1,13 @@
+@relation sequential_places
+
+@attribute personID {1,2}
+@attribute PlaceID {23,34,14,65,63}
+
+@data
+1,23
+1,34
+1,14
+2,65
+2,63
+2,34
+2,14
