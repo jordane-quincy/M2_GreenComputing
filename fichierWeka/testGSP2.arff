@@ -1,0 +1,23 @@
+@relation sequential_test_zaki 
+  
+@attribute sequenceID {1, 2, 3, 4} 
+@attribute itemA {null,A} 
+@attribute itemB {null,B} 
+@attribute itemC {null,C} 
+@attribute itemD {null,D} 
+@attribute itemE {null,E} 
+@attribute itemF {null,F} 
+@attribute itemG {null,G} 
+@attribute itemH {null,H} 
+  
+@data 
+1,null,null,C,D,null,null,null,null 
+1,A,B,C,null,null,null,null,null 
+1,A,B,null,D,null,F,null,null 
+1,A,B,C,D,null,F,null,null 
+2,A,null,C,null,null,F,null,null 
+2,null,null,null,null,E,null,null,null 
+3,A,B,null,null,null,F,null,null 
+4,null,null,null,D,null,null,G,H 
+4,null,B,null,null,null,F,null,null 
+4,A,null,null,null,null,null,G,H 

@@ -26,7 +26,7 @@ Musique,Messenger,Facebook,Internet,GameAI,Musique,Email,PDFReader
 Email,Internet,Musique,PDFReader,Message,Internet,GPS,Messenger
 Musique,GameSI,Internet,Email,Facebook,Internet,GPS,Message
 GameAI,Message,GameAI,Message,Call,Internet,Message,GAP
-Contact,Call,Musique,GAP,Camera,GAP,Message,Facebook
+Contacts,Call,Musique,GAP,Camera,GAP,Message,Facebook
 GPS,Musique,GPS,GAP,Camera,Message,Facebook,Camera
 Musique,GAP,Contacts,Call,GPS,Internet,GPS,GAP
 Musique,GPS,GAP,Message,Messenger,Musique,GameSI,Message

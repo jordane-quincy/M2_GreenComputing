@@ -1,0 +1,15 @@
+@relation sequential_fruits
+
+@attribute sequence{1,2}
+@attribute fruta_1{pear,peach,orange,melon,apple, null}
+@attribute fruta_2{pear,peach,orange,melon,apple, null}
+@attribute fruta_3{pear,peach,orange,melon,apple, null}
+@attribute fruta_4{pear,peach,orange,melon,apple, null}
+@attribute fruta_5{pear,peach,orange,melon,apple,null}
+
+@data
+1,pear,peach,null,peach,null
+1,pear,null,peach,null,null
+2,pear,peach,null,null,peach
+2,pear,apple,null,null,null
+2,pear,peach,null,null,null
